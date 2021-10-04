@@ -1,9 +1,28 @@
-import { Component } from 'react';
-import { useSpring, animated } from 'react-spring';
-import { Typography, Button, Grid } from '@mui/material';
+import { Component, useState, useRef } from 'react';
+import { useSpring, animated } from '@react-spring/web';
+import { Typography, Button, Dialog, Paper,
+         Box, Toolbar, IconButton, AppBar } from '@mui/material';
+import { Link } from 'react-router-dom';
 import { Parallax, ParallaxLayer } from '@react-spring/parallax';
+
 import { withStyles } from '@mui/styles';
-import firstImage from '../image/firstPage.JPG'
+import '../css/main.css';
+
+
+const Page = ({ offset, gradient }) => (
+    <>
+      <ParallaxLayer offset={offset} speed={0.2}>
+        <div className="slopeBegin" />
+      </ParallaxLayer>
+  
+      <ParallaxLayer offset={offset} speed={0.6}>
+        <div className={`${"slopeEnd"} ${[gradient]}`} />
+      </ParallaxLayer>
+  
+      <ParallaxLayer className={`${"text"} ${"number"}`} offset={offset} speed={0.3}>
+      </ParallaxLayer>
+    </>
+  )
 
 const useStyles = theme => ({
     typography: {
@@ -18,21 +37,26 @@ const useStyles = theme => ({
         display: "flex",
         justifyContent: "center",
         alignItems: "flex-start"
+    },
+    mainPaper: {
+        width: "100%",
+        height: "100%",
     }
 });
 
 const Title = () => {
     const styles = useSpring({
         loop: false,
-        to:
-          //{ opacity: 1, color: '#ffaaee' },
-          { opacity: 1, color: 'rgb(14,26,19)' },
+        to: { opacity: 1, color: 'rgb(255,255,255)' },
         from: { opacity: 0, color: '#ffaaee' },
     });
 
     return (<animated.div style={styles}>
         <Typography variant="h1" style={{fontFamily: 'baemin'}}>
-            Keyword Trend Visualizer
+            Keyword Trend
+        </Typography>
+        <Typography variant="h1" style={{fontFamily: 'baemin'}}>
+            Visualizer
         </Typography>
         </animated.div>)
 }
@@ -40,59 +64,33 @@ const Title = () => {
 class Main extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            visualizer: false,
+        }
+    }
+
+    convertDialog = (event) => {
+        this.setState({visualizer: !this.state.visualizer});
     }
 
     render() {
         const { classes } = this.props;
         return (
-            <div className={classes.root}>
-                <Parallax pages={3}>
-                <ParallaxLayer
-                    offset={0}
-                    speed={2.5}
-                    style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundImage: `url(${firstImage})`, backgroundSize: 'cover' }}>
-                    <Grid container spacing={2} style={{height: "100%"}}>
-                        <Grid item xs={12} className={classes.title}>
-                            <Title/>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <a href='https://.pngtree.com/free-backgrounds'>무료 배경 사진 .pngtree.com/</a>
-                        </Grid>
-                    </Grid>
-
-                </ParallaxLayer>
-        
-                <ParallaxLayer offset={1} speed={2} style={{ backgroundColor: '#ff6d6d' }} />
-        
-                <ParallaxLayer
-                    offset={1}
-                    speed={0.5}
-                    style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    color: 'white',
-                    }}>
-                    <p>Scroll down</p>
-                </ParallaxLayer>
-
-                <ParallaxLayer offset={2} speed={2} style={{ backgroundColor: '#ff6d6c' }} />
-
-                <ParallaxLayer
-                    offset={2}
-                    speed={2.5}
-                    style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    color: 'white',
-                    }}>
-                    <p>Scroll up</p>
-                    <Button>test</Button>
-                </ParallaxLayer>
-
-                </Parallax>
-            </div>
+          <div className={classes.root} style={{ background: '#dfdfdf' }}>
+            <Parallax className="container" pages={3} horizontal>
+              <Page offset={0} gradient="pink"/>
+              <ParallaxLayer offset={0}>
+                  <Title />
+              </ParallaxLayer>
+              <Page offset={1} gradient="teal" />
+              <Page offset={2} gradient="tomato" />
+              <ParallaxLayer offset={2}>
+                    <Link to={'/visualizer'}>
+                        <Button onClick={this.convertDialog}>go!</Button>
+                    </Link>
+              </ParallaxLayer>
+            </Parallax>
+          </div>
         );
     }
 }
