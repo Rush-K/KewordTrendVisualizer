@@ -37,7 +37,7 @@ class Visualizer extends Component {
                             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} style={{fontFamily: "baemin"}}>
                                 Keyword Trend Visualizer
                             </Typography>
-                            <Button color="inherit">Login</Button>
+                            <Button color="inherit">Past Page</Button>
                             </Toolbar>
                         </AppBar>
                         <Drawer
@@ -51,7 +51,7 @@ class Visualizer extends Component {
                             <Toolbar />
                             <Box sx={{ overflow: 'auto' }}>
                             <List>
-                                {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+                                {['1', '2', '3', '4'].map((text, index) => (
                                 <ListItem button key={text}>
                                     <ListItemIcon>
                                     {index % 2 === 0 ? <Inbox /> : <Mail />}
