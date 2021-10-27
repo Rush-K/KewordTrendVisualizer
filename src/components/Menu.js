@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import { Box, Paper, Divider, 
          List, ListItem, ListItemIcon, ListItemText, ListItemButton,
-         styled, createTheme, ThemeProvider } from '@mui/material';
+         styled, createTheme, ThemeProvider, SvgIcon } from '@mui/material';
+
+import PannIcon from '../icon/pann.svg';
+import TheQooIcon from '../icon/theqoo.svg';
+import RuriwebIcon from '../icon/ruriweb.png';
 
 const media = [
-    { label: '더쿠' },
-    { label: '네이트판'},
-    { label: '루리웹'}
+    { icon: TheQooIcon, label: '더쿠' },
+    { icon: PannIcon, label: '네이트판'},
+    { icon: RuriwebIcon, label: '루리웹'}
 ];
 
 const FireNav = styled(List)({
@@ -86,6 +90,9 @@ class Menu extends Component {
                                 <ListItemButton
                                 key={item.label}
                                 sx={{ py: 0, minHeight: 32, color: 'rgba(255,255,255,.8)' }}>
+                                    <ListItemIcon sx={{ color: 'inherit' }}>
+                                        <img style={{ height: "3vh" }} src={item.icon}/>
+                                    </ListItemIcon>
                                     <ListItemText
                                     primary={item.label}
                                     primaryTypographyProps={{ fontSize: 15, fontWeight: 'medium' }}
