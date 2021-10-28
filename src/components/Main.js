@@ -1,98 +1,112 @@
-import { Component, useState, useRef } from 'react';
-import { useSpring, animated } from '@react-spring/web';
+import React, { Component, useState, useRef } from 'react';
+import { useSpring, useSprings, animated } from '@react-spring/web';
 import { Typography, Button, Dialog, Paper,
          Box, Toolbar, IconButton, AppBar } from '@mui/material';
-import { Link } from 'react-router-dom';
-import { Parallax, ParallaxLayer } from '@react-spring/parallax';
-
-import { withStyles } from '@mui/styles';
+import useMeasure from 'react-use-measure'
+import { useDrag } from 'react-use-gesture';
+import clamp from 'lodash.clamp';
 import '../css/main.css';
+import Visualizer from './Visualizer';
 
+import { useTrail, a } from 'react-spring';
 
-const Page = ({ offset, gradient }) => (
-    <>
-      <ParallaxLayer offset={offset} speed={0.2}>
-        <div className="slopeBegin" />
-      </ParallaxLayer>
-  
-      <ParallaxLayer offset={offset} speed={0.6}>
-        <div className={`${"slopeEnd"} ${[gradient]}`} />
-      </ParallaxLayer>
-  
-      <ParallaxLayer className={`${"text"} ${"number"}`} offset={offset} speed={0.3}>
-      </ParallaxLayer>
-    </>
-  )
-
-const useStyles = theme => ({
-    typography: {
-        fontFamily: 'baemin',
-    },
-    root: {
-        width: "100vw",
-        height: "100vh"
-    },
-    title: {
-        height: "100%",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "flex-start"
-    },
-    mainPaper: {
-        width: "100%",
-        height: "100%",
-    }
-});
+const Trail = ({ open, children }) => {
+    const items = React.Children.toArray(children)
+    const trail = useTrail(items.length, {
+      config: { mass: 200, tension: 1000, friction: 800 },
+      opacity: open ? 1 : 0,
+      x: open ? 0 : 20,
+      height: open ? 110 : 0,
+      from: { opacity: 0, x: 20, height: 0 },
+    })
+    return (
+      <div>
+        {trail.map(({ height, ...style }, index) => (
+          <a.div key={index} style={style}>
+            <a.div style={{ height }}>{items[index]}</a.div>
+          </a.div>
+        ))}
+      </div>
+    )
+}
 
 const Title = () => {
     const styles = useSpring({
-        loop: false,
-        to: { opacity: 1, color: 'rgb(255,255,255)' },
-        from: { opacity: 0, color: '#ffaaee' },
-    });
+        loop: true,
+        to: [
+          { opacity: 1, color: '#ffaaee' },
+          { opacity: 0, color: 'rgb(14,26,19)' },
+        ],
+        from: { opacity: 0, color: 'red' },
+      })
 
-    return (<animated.div style={styles}>
-        <Typography variant="h1" style={{fontFamily: 'baemin'}}>
-            Keyword Trend
-        </Typography>
-        <Typography variant="h1" style={{fontFamily: 'baemin'}}>
-            Visualizer
-        </Typography>
-        </animated.div>)
+    return (
+        <div style={{ height: "100vh", display: "flex", justifyContent: "center", alignItems: "center"}}>
+        <Trail open="true">
+            <Typography variant="h1" style={{textAlign: "center", fontFamily: 'baemin'}}>
+                Keyword Trend
+            </Typography>
+            <Typography variant="h1" style={{textAlign: "center", fontFamily: 'baemin'}}>
+                Visualizer
+            </Typography>
+            <animated.div style={styles}>
+                <Typography variant="h3" style={{textAlign: "center", fontFamily: 'baemin'}}>
+                    Swipe to Left!
+                </Typography>
+            </animated.div>
+        </Trail>
+        </div>
+        )
 }
+  
+const ViewPager = () => {
+    const index = useRef(0);
+    const [ref, { width }] = useMeasure()
+    const [props, api] = useSprings(
+      2,
+      i => ({
+        x: i * width,
+        scale: width === 0 ? 0 : 1,
+        display: 'block',
+      }),
+      [width]
+    )
+    const bind = useDrag(({ active, movement: [mx], direction: [xDir], distance, cancel }) => {
+      if (active && distance > width / 2) {
+        index.current = clamp(index.current + (xDir > 0 ? -1 : 1), 0, 2 - 1)
+        cancel()
+      }
+      api.start(i => {
+        if (i < index.current - 1 || i > index.current + 1) return { display: 'none' }
+        const x = (i - index.current) * width + (active ? mx : 0)
+        const scale = active ? 1 - distance / width / 2 : 1
+        return { x, scale, display: 'block' }
+      })
+    })
+    return (
+      <div ref={ref} className="wrapper">
+        {props.map(({ x, display, scale }, i) => (
+          <animated.div className="page" {...bind()} key={i} style={{ display, x }}>
+            <animated.div style={{ scale }}>
+                {i === 0 ? <Title /> : <Visualizer />}
+            </animated.div>
+          </animated.div>
+        ))}
+      </div>
+    )
+  }
 
 class Main extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            visualizer: false,
-        }
     }
-
-    convertDialog = (event) => {
-        this.setState({visualizer: !this.state.visualizer});
-    }
-
     render() {
-        const { classes } = this.props;
         return (
-          <div className={classes.root} style={{ background: '#dfdfdf' }}>
-            <Parallax className="container" pages={3} horizontal>
-              <Page offset={0} gradient="pink"/>
-              <ParallaxLayer offset={0}>
-                  <Title />
-              </ParallaxLayer>
-              <Page offset={1} gradient="teal" />
-              <Page offset={2} gradient="tomato" />
-              <ParallaxLayer offset={2}>
-                    <Link to={'/visualizer'}>
-                        <Button onClick={this.convertDialog}>go!</Button>
-                    </Link>
-              </ParallaxLayer>
-            </Parallax>
+          <div className="container">
+                <ViewPager />
           </div>
         );
     }
 }
 
-export default withStyles(useStyles)(Main);
+export default Main;

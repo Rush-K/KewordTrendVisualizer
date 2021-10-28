@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { withStyles } from '@mui/styles';
 import Menu from './Menu';
 import DefaultBoard from './Boards/DefaultBoard';
+import CommunityBoard from './Boards/CommunityBoard';
 
 const useStyles = (theme) => ({
     background: {
@@ -29,21 +30,31 @@ class Visualizer extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            defaultBoardOpen: "true",
-            communityBoardOpen: "true",
-
+            defaultBoardOpen: true,
+            communityBoardOpen: false,
+            communityBoardName: "",
         }
+    }
+
+    defaultBoardStateChange = () => {
+        this.setState({ defaultBoardOpen: true, communityBoardOpen: false, communityBoardName: "" });
+    }
+
+    communityBoardStateChange = (prev) => {
+        this.setState({ defaultBoardOpen: false, communityBoardOpen: true, communityBoardName: prev});
     }
 
     render() {
         const { classes } = this.props;
+        console.log(this.state);
         return (
             <div id="background" className={classes.background}>
                 <div id="menu" className={classes.menu}>
-                    <Menu />
+                    <Menu defaultBoardStateChange={this.defaultBoardStateChange} communityBoardStateChange={this.communityBoardStateChange}/>
                 </div>
                 <div className={classes.board}>
-                    <DefaultBoard/>
+                    {this.state.defaultBoardOpen === true && <DefaultBoard/>}
+                    {this.state.communityBoardOpen === true && <CommunityBoard name={this.state.communityBoardName}/>}
                 </div>
             </div>
 

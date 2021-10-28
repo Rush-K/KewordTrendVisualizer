@@ -9,8 +9,8 @@ import RuriwebIcon from '../icon/ruriweb.png';
 
 const media = [
     { icon: TheQooIcon, label: '더쿠' },
-    { icon: PannIcon, label: '네이트판'},
-    { icon: RuriwebIcon, label: '루리웹'}
+    { icon: PannIcon, label: '네이트판' },
+    { icon: RuriwebIcon, label: '루리웹' }
 ];
 
 const FireNav = styled(List)({
@@ -34,6 +34,7 @@ class Menu extends Component {
 
     render() {
         const { classes } = this.props;
+
         return (
             <Box sx={{ display: "flex" }}>
                 <ThemeProvider
@@ -56,7 +57,7 @@ class Menu extends Component {
                 })}>
                     <Paper elevation={0} sx={{ width: 256, height: "100vh" }}>
                         <FireNav component="nav" disablePadding>
-                            <ListItemButton component="a" href="/visualizer">
+                            <ListItemButton component="a" onClick={this.props.defaultBoardStateChange}>
                                 <ListItemIcon sx={{ fontSize: 20 }}>🔥</ListItemIcon>
                                 <ListItemText
                                     sx={{ my: 0 }}
@@ -88,6 +89,7 @@ class Menu extends Component {
                             <Divider />
                             {media.map((item) => (
                                 <ListItemButton
+                                onClick={() => this.props.communityBoardStateChange(item.label)}
                                 key={item.label}
                                 sx={{ py: 0, minHeight: 32, color: 'rgba(255,255,255,.8)' }}>
                                     <ListItemIcon sx={{ color: 'inherit' }}>
