@@ -33,6 +33,7 @@ class Visualizer extends Component {
             defaultBoardOpen: true,
             communityBoardOpen: false,
             communityBoardName: "",
+            communityBoardLabel: "",
         }
     }
 
@@ -40,8 +41,8 @@ class Visualizer extends Component {
         this.setState({ defaultBoardOpen: true, communityBoardOpen: false, communityBoardName: "" });
     }
 
-    communityBoardStateChange = (prev) => {
-        this.setState({ defaultBoardOpen: false, communityBoardOpen: true, communityBoardName: prev});
+    communityBoardStateChange = (prev, label) => {
+        this.setState({ defaultBoardOpen: false, communityBoardOpen: true, communityBoardName: prev, communityBoardLabel: label});
     }
 
     render() {
@@ -54,7 +55,7 @@ class Visualizer extends Component {
                 </div>
                 <div className={classes.board}>
                     {this.state.defaultBoardOpen === true && <DefaultBoard/>}
-                    {this.state.communityBoardOpen === true && <CommunityBoard name={this.state.communityBoardName}/>}
+                    {this.state.communityBoardOpen === true && <CommunityBoard name={this.state.communityBoardName} label={this.state.communityBoardLabel}/>}
                 </div>
             </div>
 

@@ -9,6 +9,7 @@ import '../css/main.css';
 import Visualizer from './Visualizer';
 
 import { useTrail, a } from 'react-spring';
+import background from '../icon/background.jpg'
 
 const Trail = ({ open, children }) => {
     const items = React.Children.toArray(children)
@@ -41,16 +42,16 @@ const Title = () => {
       })
 
     return (
-        <div style={{ height: "100vh", display: "flex", justifyContent: "center", alignItems: "center"}}>
+        <div style={{ width: "100%", height: "100vh", display: "flex", marginLeft: "10vw",alignItems: "center"}}>
         <Trail open="true">
-            <Typography variant="h1" style={{textAlign: "center", fontFamily: 'baemin'}}>
+            <Typography variant="h1" style={{fontFamily: 'baemin'}}>
                 Keyword Trend
             </Typography>
-            <Typography variant="h1" style={{textAlign: "center", fontFamily: 'baemin'}}>
+            <Typography variant="h1" style={{fontFamily: 'baemin'}}>
                 Visualizer
             </Typography>
             <animated.div style={styles}>
-                <Typography variant="h3" style={{textAlign: "center", fontFamily: 'baemin'}}>
+                <Typography variant="h3" style={{fontFamily: 'baemin'}}>
                     Swipe to Left!
                 </Typography>
             </animated.div>
@@ -87,7 +88,7 @@ const ViewPager = () => {
       <div ref={ref} className="wrapper">
         {props.map(({ x, display, scale }, i) => (
           <animated.div className="page" {...bind()} key={i} style={{ display, x }}>
-            <animated.div style={{ scale }}>
+            <animated.div style={{ scale, backgroundImage: `url('${background}')` }}>
                 {i === 0 ? <Title /> : <Visualizer />}
             </animated.div>
           </animated.div>
