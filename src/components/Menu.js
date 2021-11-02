@@ -5,12 +5,14 @@ import { Box, Paper, Divider,
 
 import PannIcon from '../icon/pann.svg';
 import TheQooIcon from '../icon/theqoo.svg';
+import EtolandIcon from '../icon/etoland.svg';
 import RuriwebIcon from '../icon/ruriweb.png';
 
 const media = [
-    { icon: TheQooIcon, label: '더쿠' },
-    { icon: PannIcon, label: '네이트판' },
-    { icon: RuriwebIcon, label: '루리웹' }
+    { icon: TheQooIcon, label: '더쿠', name: 'theqoo' },
+    { icon: PannIcon, label: '네이트판', name: 'natepann' },
+    { icon: RuriwebIcon, label: '루리웹', name: 'ruriweb' },
+    { icon: EtolandIcon, label: '이토랜드', name: 'etoland'},
 ];
 
 const FireNav = styled(List)({
@@ -72,7 +74,7 @@ class Menu extends Component {
                             <ListItemText
                                 primary="커뮤니티 목록"
                                 primaryTypographyProps={{
-                                    fontSize: 20,
+                                    fontSize: 25,
                                     fontWeight: 'medium',
                                     lineHeight: '30px',
                                     mb: '2px',
@@ -89,15 +91,15 @@ class Menu extends Component {
                             <Divider />
                             {media.map((item) => (
                                 <ListItemButton
-                                onClick={() => this.props.communityBoardStateChange(item.label)}
+                                onClick={() => this.props.communityBoardStateChange(item.name, item.label)}
                                 key={item.label}
                                 sx={{ py: 0, minHeight: 32, color: 'rgba(255,255,255,.8)' }}>
                                     <ListItemIcon sx={{ color: 'inherit' }}>
-                                        <img style={{ height: "3vh" }} src={item.icon}/>
+                                        <img style={{ height: "2vh" }} src={item.icon}/>
                                     </ListItemIcon>
                                     <ListItemText
                                     primary={item.label}
-                                    primaryTypographyProps={{ fontSize: 15, fontWeight: 'medium' }}
+                                    primaryTypographyProps={{ fontSize: 16, fontWeight: 'medium' }}
                                     />
                                 </ListItemButton>
                             ))}
