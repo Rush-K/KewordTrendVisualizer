@@ -43,8 +43,8 @@ class DefaultBoard extends Component {
         return (
             <Trail open={this.state.open}>
                 <Typography sx={{textAlign: "center", fontFamily: 'baemin'}} variant="h1">안녕하세요!</Typography>
-                <Typography sx={{fontFamily: 'baemin'}} variant="h2">좌측 메뉴를 통해 커뮤니티를 선택해주세요.</Typography>
-                <Typography sx={{fontFamily: 'baemin'}} variant="h3">다양한 키워드 트렌드를 알아볼 수 있어요!</Typography>                    
+                <Typography sx={{textAlign: "center", fontFamily: 'baemin'}} variant="h2">좌측 메뉴를 통해 커뮤니티를 선택해주세요.</Typography>
+                <Typography sx={{textAlign: "center", fontFamily: 'baemin'}} variant="h3">다양한 키워드 트렌드를 알아볼 수 있어요!</Typography>                    
             </Trail>
         );
     }
