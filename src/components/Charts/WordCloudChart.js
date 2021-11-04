@@ -35,13 +35,13 @@ class WordCloudChart extends Component {
         }
     }
 
-    fontSizeMapper = (word) => Math.log2(word.value) * 20;
+    fontSizeMapper = (word) => Math.log2(word.value) * 3;
     rotate = (word) => (word.value % 90) - 45;
 
     render() {
         const { classes } = this.props;
         return (
-            <WordCloud style={classes.wordcloud} width={1000} data={this.state.keywordData} rotate={this.rotate} padding={3} fontSize={this.fontSizeMapper} />
+            <WordCloud style={classes.wordcloud} width={1500} data={this.props.keywordData} rotate={this.rotate} padding={3} fontSize={this.fontSizeMapper} />
         );
     }
 }
