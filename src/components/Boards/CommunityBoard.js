@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { Typography, Button, CircularProgress, Paper } from '@mui/material';
-import axios from 'axios';
 import { withStyles } from '@mui/styles';
 import { useTrail, a } from 'react-spring';
 
 import WordCloudChart from '../Charts/WordCloudChart';
-import TopFiveBarChart from '../Charts/TopFiveBarChart';
+import TopBarChart from '../Charts/TopBarChart';
+import CircleChart from '../Charts/CircleChart';
+import TopPolarAreaChart from '../Charts/TopPolarAreaChart';
 
 const Trail = ({ open, children, cssstyle, name }) => {
     const items = React.Children.toArray(children)
@@ -21,8 +22,8 @@ const Trail = ({ open, children, cssstyle, name }) => {
         {trail.map(({ height, ...style }, index) => (
           <a.div key={index} className={cssstyle} style={style}>
             {/*<a.div style={{ height }}>{items[index]}</a.div>*/}
-            <Typography variant="h5" sx={{fontFamily: "baemin"}}>{name}</Typography>
-            <Paper elevation={3} style={{width: "30vw", height: "450px", display: "flex", justifyContent: "center", flexDirection: "column"}}>
+            <Typography variant="h5" sx={{textAlign: "center", fontFamily: "baemin"}}>{name}</Typography>
+            <Paper elevation={0} style={{width: "30vw", height: "450px", display: "flex", justifyContent: "center", flexDirection: "column"}}>
                 {items[index]}
             </Paper>
           </a.div>
@@ -36,7 +37,8 @@ const useStyles = (theme) => ({
         width: "100%",
         height: "100%",
         display: "grid",
-        gridTemplateRows: "20% 40% 40%",
+        gridTemplateRows: "10% 45% 45%",
+        gridTemplateColumns: "50%",
         '& > div#title': {
             width: "100%",
             height: "100%",
@@ -46,17 +48,17 @@ const useStyles = (theme) => ({
             justifyContent: "center",
             alignItems: "center",
         },
-        '& > div#wordcloud': {
+        '& > div#word': {
             width: "100%",
             height: "100%",
             gridRow: "2 / 3",
             display: "flex",
             justifyContent: "center",
         },
-        '& > div#topfivebar': {
+        '& > div#oov': {
             width: "100%",
             height: "100%",
-            gridRow: "2 / 3",
+            gridRow: "3 / 4",
             display: "flex",
             justifyContent: "center"
         }
@@ -72,48 +74,36 @@ const useStyles = (theme) => ({
 class CommunityBoard extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            loadingData: true,
-            keywordData : [],
-        }
-    }
-    
-    componentDidMount = async() => {
-        /*
-        let data = await axios.get('http://1.234.107.151:8080/api/' + this.props.name + '/keyword')
-                              .then(function (response) {
-                                  return response.data;
-                              })
-                              .catch(function (error) {
-                                  console.log(error);
-                              });
-        this.setState({ keywordData: data.result, loadingData: true});
-        console.log(this.state);
-        */
     }
 
     render() {
         const { classes } = this.props;
         return (
-            this.state.loadingData === true ? 
             <div className={classes.root}>
                 <div id="title">
-                    <Typography variant="h1" sx={{fontFamily: "baemin", textAlign: "center"}}>{this.props.label} 트렌드 분석 결과</Typography>
+                    <Typography variant="h2" sx={{fontFamily: "baemin", textAlign: "center"}}>{this.props.label} 트렌드 분석 결과</Typography>
                 </div>
-                <div id="wordcloud">
-                    <Trail name={"워드클라우드"} cssstyle={classes.trail} open={true}>
-                        <WordCloudChart keywordData={this.state.keywordData} />
+                <div id="word">
+                    <Trail name={"키워드"} cssstyle={classes.trail} open={true}>
+                        <WordCloudChart keywordData={this.props.keywordData} />
                     </Trail>
                 </div> 
-                <div id="topfivebar">
-                    <Trail name={"빈도수 TOP 5"} cssstyle={classes.trail} open={true}>
-                        <TopFiveBarChart />
+                <div id="word">
+                    <Trail name={"키워드 빈도수 TOP 10"} cssstyle={classes.trail} open={true}>
+                        <TopBarChart keywordData={this.props.keywordData.slice(0, 10)}/>
+                    </Trail>
+                </div> 
+                <div id="oov">
+                    <Trail name={"예상 신조어"} cssstyle={classes.trail} open={true}>
+                        <CircleChart oovwordData={this.props.oovwordData}/>
+                    </Trail>
+                </div>
+                <div id="oov">
+                    <Trail name={"예상 신조어 빈도수 TOP 10"} cssstyle={classes.trail} open={true}>
+                       <TopPolarAreaChart oovwordData={this.props.oovwordData.slice(0, 10)}/>
                     </Trail>
                 </div>
             </div>
-             :
-            <CircularProgress />
-
         );
     }
 }

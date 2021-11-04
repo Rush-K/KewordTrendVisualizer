@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { withStyles } from '@mui/styles';
 import Menu from './Menu';
+import axios from 'axios';
 import DefaultBoard from './Boards/DefaultBoard';
 import CommunityBoard from './Boards/CommunityBoard';
+import { CircularProgress } from '@mui/material';
 
 const useStyles = (theme) => ({
     background: {
@@ -34,6 +36,9 @@ class Visualizer extends Component {
             communityBoardOpen: false,
             communityBoardName: "",
             communityBoardLabel: "",
+            dataLoaded: false,
+            keywordData: [],
+            oovwordData: []
         }
     }
 
@@ -41,8 +46,43 @@ class Visualizer extends Component {
         this.setState({ defaultBoardOpen: true, communityBoardOpen: false, communityBoardName: "" });
     }
 
-    communityBoardStateChange = (prev, label) => {
-        this.setState({ defaultBoardOpen: false, communityBoardOpen: true, communityBoardName: prev, communityBoardLabel: label});
+    communityBoardStateChange = async(prev, label) => {
+        await this.setState({ defaultBoardOpen: false,
+                        communityBoardOpen: true,
+                        dataLoaded: false,
+        });
+
+        let data = await axios.get('http://1.234.107.151:8080/api/' + prev + '/keyword')
+        .then(function (response) {
+            return response.data;
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+        
+        let oovdata = await axios.get('http://1.234.107.151:8080/api/' + prev + '/neologism')
+        .then(function (response) {
+            return response.data;
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+
+        if (data.result.length != 0 && data.result != null && oovdata.result.length != 0 && oovdata.result != null) {
+            this.setState({ 
+                communityBoardName: prev,
+                communityBoardLabel: label,
+                dataLoaded: true,
+                keywordData: data.result,
+                oovwordData: oovdata.result
+            });
+        } else {
+            this.setState({ 
+                communityBoardName: prev,
+                communityBoardLabel: label,
+                dataLoaded: false,
+            });
+        }
     }
 
     render() {
@@ -55,7 +95,9 @@ class Visualizer extends Component {
                 </div>
                 <div className={classes.board}>
                     {this.state.defaultBoardOpen === true && <DefaultBoard/>}
-                    {this.state.communityBoardOpen === true && <CommunityBoard name={this.state.communityBoardName} label={this.state.communityBoardLabel}/>}
+                    {this.state.communityBoardOpen === true && this.state.dataLoaded === false && <CircularProgress />}
+                    {this.state.communityBoardOpen === true && this.state.dataLoaded === true && <CommunityBoard oovwordData={this.state.oovwordData} keywordData={this.state.keywordData} name={this.state.communityBoardName} label={this.state.communityBoardLabel}/>}
+
                 </div>
             </div>
 

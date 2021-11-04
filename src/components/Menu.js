@@ -11,7 +11,7 @@ import RuriwebIcon from '../icon/ruriweb.png';
 const media = [
     { icon: TheQooIcon, label: '더쿠', name: 'theqoo' },
     { icon: PannIcon, label: '네이트판', name: 'natepann' },
-    { icon: RuriwebIcon, label: '루리웹', name: 'ruriweb' },
+    { icon: RuriwebIcon, label: '루리웹', name: 'ruliweb' },
     { icon: EtolandIcon, label: '이토랜드', name: 'etoland'},
 ];
 
