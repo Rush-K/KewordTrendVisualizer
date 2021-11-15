@@ -20,8 +20,8 @@ class CircleChart extends Component {
     componentDidMount = () => {
         this.setState({ 
             data: {
-                "name": "t",
-                "children": [{"name": "s", "children": this.state.data.children[0].children.concat(this.props.oovwordData.map((d) => {
+                "name": "",
+                "children": [{"name": "", "children": this.state.data.children[0].children.concat(this.props.oovwordData.map((d) => {
                     return {"name": d.label, "loc": d.value};}))}]
             }
         });

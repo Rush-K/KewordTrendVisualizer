@@ -23,7 +23,7 @@ const Trail = ({ open, children, cssstyle, name }) => {
           <a.div key={index} className={cssstyle} style={style}>
             {/*<a.div style={{ height }}>{items[index]}</a.div>*/}
             <Typography variant="h5" sx={{textAlign: "center", fontFamily: "baemin"}}>{name}</Typography>
-            <Paper elevation={0} style={{width: "30vw", height: "450px", display: "flex", justifyContent: "center", flexDirection: "column"}}>
+            <Paper elevation={0} style={{width: "30vw", height: "35vh", display: "flex", justifyContent: "center", flexDirection: "column"}}>
                 {items[index]}
             </Paper>
           </a.div>
